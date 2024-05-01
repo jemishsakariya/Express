@@ -1,4 +1,4 @@
-exports.isValid = (req, res, next) => {
+exports.isValidForRegister = (req, res, next) => {
   try {
     const { email, password } = req.body;
 
