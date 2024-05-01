@@ -1,4 +1,5 @@
 const fs = require("fs");
+const crypto = require("crypto");
 
 function writeData(data) {
   const stringifyData = JSON.stringify(data);
@@ -15,7 +16,12 @@ exports.createUser = (req, res) => {
       return res.status(403).json({ message: "User is Already Exist" });
     }
 
-    userData.push({ email, password });
+    const salt = crypto.randomBytes(16).toString("hex");
+    const encryptedPass = crypto
+      .pbkdf2Sync(password, salt, 1000, 32, "sha256")
+      .toString("hex");
+
+    userData.push({ email, password: encryptedPass });
     writeData(userData);
 
     return res.status(200).json({ message: "User Created Successfully" });
