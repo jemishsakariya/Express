@@ -1,6 +1,18 @@
 [
   {
-    "email": "jemish@gmail.com",
-    "password": "0f4f2cc81cc69c4b55ac41182b245564d8df4ce736516c4cb1817025404764a4"
+    "email": "abc@gmail.com",
+    "password": "$2b$10$O1tEs8iD0dobu8OzJxvzUuxaA8JZ1t31t48iE6VncHgXOfrhQ3PdO"
+  },
+  {
+    "email": "jemish1@gmail.com",
+    "password": "$2b$10$lYWBOTD8zQA2CUvTELots.rosYS1Jwfen/KUsYRoQkMXnL4C8862q"
+  },
+  {
+    "email": "jemish2@gmail.com",
+    "password": "$2b$10$Ia5vf6mltlaVkB/H9BCos.3NqBSyEL.SyVRqMxmKth7YyeGRV4zXq"
+  },
+  {
+    "email": "jemish3@gmail.com",
+    "password": "$2b$10$n8ArcfPGbP5CS2Arfk4L/esy20LS8wZpRPAEUqzhg1l61WFDKRITG"
   }
 ]

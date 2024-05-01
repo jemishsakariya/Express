@@ -1,12 +1,12 @@
 const fs = require("fs");
-const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 function writeData(data) {
   const stringifyData = JSON.stringify(data);
   fs.writeFileSync("./userData.json", stringifyData);
 }
 
-exports.createUser = (req, res) => {
+exports.createUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const userData = req.userData;
@@ -16,10 +16,8 @@ exports.createUser = (req, res) => {
       return res.status(403).json({ message: "User is Already Exist" });
     }
 
-    const salt = crypto.randomBytes(16).toString("hex");
-    const encryptedPass = crypto
-      .pbkdf2Sync(password, salt, 1000, 32, "sha256")
-      .toString("hex");
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPass = await bcrypt.hash(password, salt);
 
     userData.push({ email, password: encryptedPass });
     writeData(userData);
@@ -79,7 +77,38 @@ exports.updateUserEmail = (req, res) => {
 
     writeData(userData);
 
-    return res.status(200).json({ message: "User updated SuccessFully" });
+    return res.status(200).json({ message: "User Email updated SuccessFully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", data: error.message });
+  }
+};
+
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+    const userData = req.userData;
+
+    const UserIdx = userData.findIndex((user) => user.email === email);
+    if (UserIdx == -1) {
+      return res.status(404).json({ message: "User Not Exist" });
+    }
+
+    const match = await bcrypt.compare(oldPassword, userData[UserIdx].password);
+    if (!match) {
+      return res.status(404).json({ message: "Password Does not Match" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const encryptedPass = await bcrypt.hash(newPassword, salt);
+
+    userData[UserIdx].password = encryptedPass;
+    writeData(userData);
+
+    return res
+      .status(200)
+      .json({ message: "User Password updated SuccessFully" });
   } catch (error) {
     return res
       .status(500)

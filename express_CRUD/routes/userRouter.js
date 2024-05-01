@@ -8,14 +8,16 @@ const {
   updateUserEmail,
   deleteUser,
   searchUser,
+  updateUserPassword,
 } = require("../controller/userController");
 
-router.use(readData);
+router.use(readData); 
 
 router.post("/user", isValidForRegister, createUser);
 router.get("/user", getAllUser);
 router.get("/user/:search", searchUser);
-router.patch("/user", updateUserEmail);
+router.patch("/user/updateemail", updateUserEmail);
+router.patch("/user/updatepassword", updateUserPassword);
 router.delete("/user", deleteUser);
 
 router.all("*", function (req, res) {
