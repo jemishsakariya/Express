@@ -54,6 +54,9 @@ const morgan = require("morgan");
 
 app.use(morgan("dev"));
 
+const helmet = require("helmet");
+app.use(helmet());
+
 const router = require("./routes/index");
 app.use("/api", router);
 
