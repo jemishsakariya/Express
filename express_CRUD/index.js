@@ -57,6 +57,14 @@ app.use(morgan("dev"));
 const helmet = require("helmet");
 app.use(helmet());
 
+// const cors = require("cors");
+// const corsOptions = {
+  // origin: "http://127.0.0.1:5500", // all api is only available for localhost with port=5500 other can not access this app apis
+  // origin: "*", // everyone can acsess api
+  // optionsSuccessStatus: 200, status code success(200) then they able to access
+// };
+// app.use(cors(corsOptions));
+
 const router = require("./routes/index");
 app.use("/api", router);
 
@@ -65,5 +73,5 @@ app.get("/", function (req, res) {
 });
 
 app.listen(PORT, () => {
-  console.log(`server is lisning on http://127.0.0.1:${PORT}`);
+  console.log(`server is listening on http://127.0.0.1:${PORT}`);
 });
