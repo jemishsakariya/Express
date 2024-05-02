@@ -7,3 +7,6 @@ package-lock.json
 
 # IDE / Editor
 .vscode/
+
+#logs
+access
