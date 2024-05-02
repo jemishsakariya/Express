@@ -1,0 +1,2 @@
+[0mGET /api/v1/admin?page=1&pageSize=2 [32m200[0m 2.665 ms - 229[0m
+[0mGET /api/v1/admin?page=1&pageSize=2 [32m200[0m 0.766 ms - 229[0m

@@ -1,10 +1,58 @@
 const express = require("express");
 const app = express();
 
+const fs = require("fs");
+const path = require("path");
+
 const config = require("./utils/config");
 const PORT = config.PORT;
 
 app.use(express.json());
+
+const morgan = require("morgan");
+// custom format - 1
+// app.use(
+//   morgan(":method :url :status :res[content-length] - :response-time ms")
+// );
+
+// custom format - 2
+// app.use(
+//   morgan(function (tokens, req, res) {
+//     return [
+//       tokens.method(req, res),
+//       tokens.url(req, res),
+//       tokens.status(req, res),
+//       tokens.res(req, res, "content-length"),
+//       "-",
+//       tokens["response-time"](req, res),
+//       "ms",
+//     ].join(" ");
+//   })
+// );
+
+// it will skip all the log whoes status code is less than 400
+// morgan("dev", {
+//   skip: function (req, res) {
+//     return res.statusCode < 400;
+//   },
+// });
+
+// create a write stream (in append mode)
+// const accessLogStream = fs.createWriteStream(
+//   path.join(__dirname, "access.log"),
+//   {
+//     flags: "a",
+//   }
+// );
+// app.use(morgan("dev", { stream: accessLogStream }));
+
+// we can also add custom token formats.
+// morgan.token("host", function getId(req) {
+//   return req.headers["host"];
+// });
+// app.use(morgan(":host"));
+
+app.use(morgan("dev"));
 
 const router = require("./routes/index");
 app.use("/api", router);
