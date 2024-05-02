@@ -1,5 +1,7 @@
 const fs = require("fs");
 const bcrypt = require("bcrypt");
+const config = require("../utils/config");
+const jwt = require("jsonwebtoken");
 
 function writeData(data) {
   const stringifyData = JSON.stringify(data);
@@ -8,7 +10,7 @@ function writeData(data) {
 
 exports.createUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
     const userData = req.userData;
 
     const findUserIdx = userData.findIndex((user) => user.email === email);
@@ -19,7 +21,7 @@ exports.createUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const encryptedPass = await bcrypt.hash(password, salt);
 
-    userData.push({ email, password: encryptedPass });
+    userData.push({ email, password: encryptedPass, role });
     writeData(userData);
 
     return res.status(200).json({ message: "User Created Successfully" });
@@ -133,6 +135,47 @@ exports.deleteUser = (req, res) => {
     writeData(userData);
 
     return res.status(200).json({ message: "User deleted SuccessFully" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", data: error.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const userData = req.userData;
+
+    if (!email || !password) {
+      return res.status(404).json({
+        message: "Please fill all the details",
+      });
+    }
+
+    const findUserIdx = userData.findIndex((user) => {
+      return user.email === email;
+    });
+    if (findUserIdx == -1) {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+
+    const matchPassword = await bcrypt.compare(
+      password,
+      userData[findUserIdx].password
+    );
+    if (!matchPassword) {
+      return res.status(404).json({ message: "Incorrect password" });
+    }
+
+    const payload = { email, role: userData[findUserIdx].role };
+    const token = jwt.sign(payload, config.JWT_SECRET, {
+      expiresIn: "4d",
+    });
+
+    res.setHeader("Authorization", token);
+
+    return res.status(200).json({ message: "User Login Successfully" });
   } catch (error) {
     return res
       .status(500)
