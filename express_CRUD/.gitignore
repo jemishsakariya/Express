@@ -8,5 +8,5 @@ package-lock.json
 # IDE / Editor
 .vscode/
 
-#logs
+#logs of morgan
 access.log
