@@ -13,6 +13,7 @@ export default [
       semi: ["error", "always"],
     },
   },
+  { ignores: ["utils/config.js"] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
 ];
