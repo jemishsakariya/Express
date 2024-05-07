@@ -15,7 +15,7 @@ exports.isValidForRegister = (req, res, next) => {
       return res.status(400).json({ message: "Email or Password is Invalid" });
     }
 
-    next();
+    return next();
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }
