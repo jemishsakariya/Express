@@ -1,7 +1,11 @@
 const router = require("express").Router();
 
-const transactionController = require("../controller/transactionController");
+const { addTransaction } = require("../controller/transactionController");
+const {
+  transactionMiddleware,
+} = require("../middleware/transactionMiddleware");
+const { isValidTransaction } = require("../validator/transactionValidator");
 
-router.post("/", transactionController);
+router.post("/", isValidTransaction, transactionMiddleware, addTransaction);
 
 module.exports = router;

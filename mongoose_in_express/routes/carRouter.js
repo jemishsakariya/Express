@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
-const carController = require("../controller/carController");
+const { addCar } = require("../controller/carController");
+const { isValidCar } = require("../validator/carValidator");
 
-router.post("/", carController);
+router.post("/", isValidCar, addCar);
 
 module.exports = router;

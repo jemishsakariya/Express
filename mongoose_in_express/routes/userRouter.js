@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
-const userController = require("../controller/userController");
+const { addUser } = require("../controller/userController");
+const { isValidUser } = require("../validator/userValidator");
 
-router.post("/", userController);
+router.post("/", isValidUser, addUser);
 
 module.exports = router;

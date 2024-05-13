@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
-const brandController = require("../controller/brandController");
+const { addBrand } = require("../controller/brandController");
+const { isValidBrand } = require("../validator/brandValidator");
 
-router.post("/", brandController);
+router.post("/", isValidBrand, addBrand);
 
 module.exports = router;

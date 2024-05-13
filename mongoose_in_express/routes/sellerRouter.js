@@ -1,7 +1,8 @@
 const router = require("express").Router();
 
-const sellerController = require("../controller/sellerController");
+const { addSeller } = require("../controller/sellerController");
+const { isValidSaller } = require("../validator/sellerValidator");
 
-router.post("/", sellerController);
+router.post("/", isValidSaller, addSeller);
 
 module.exports = router;
