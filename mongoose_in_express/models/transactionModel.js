@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
-    oUsersID: {
+    iUsersID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    oSellersID: {
+    iSellersID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Seller",
     },
-    oCarsID: {
+    iCarsID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Car",
     },
