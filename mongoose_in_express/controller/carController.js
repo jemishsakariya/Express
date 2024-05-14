@@ -12,7 +12,7 @@ exports.addCar = async (req, res) => {
       return res.status(404).json({ sMessage: "Car Brand Not Found" });
     }
 
-    const car = await Car.create({ sName, aBrands: iBrandsID });
+    const car = await Car.create({ sName, iBrands: iBrandsID });
 
     return res
       .status(200)

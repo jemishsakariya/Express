@@ -6,12 +6,10 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    aBrands: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Brand",
-      },
-    ],
+    iBrands: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+    },
   },
   { timestamps: true }
 );
