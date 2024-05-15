@@ -7,14 +7,22 @@ exports.addSeller = async (req, res) => {
     const sCity = req.body.sCity;
     const aCarsIDs = req.body.aCarsIDs;
 
-    for (const iCarID of aCarsIDs) {
-      const oCar = await Car.findById(iCarID);
-      if (!oCar) {
-        return res
-          .status(400)
-          .json({ sMessage: `Car Not Found with id: ${iCarID}` });
-      }
+    // for (const iCarID of aCarsIDs) {
+    //   const oCar = await Car.findById(iCarID);
+    //   if (!oCar) {
+    //     return res
+    //       .status(404)
+    //       .json({ sMessage: `Car Not Found with id: ${iCarID}` });
+    //   }
+    // }
+
+    const oCar = await Car.find({
+      _id: { $in: aCarsIDs },
+    });
+    if (oCar.length != aCarsIDs.length) {
+      return res.status(404).json({ sMessage: "Seller Car Not Found" });
     }
+    // console.log(oCar);
 
     const seller = await Seller.create({ sName, sCity, aCars: aCarsIDs });
 
