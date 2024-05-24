@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     eStatus: {
+      type: String,
       enum: ["Y", "N", "B"],
     },
   },
