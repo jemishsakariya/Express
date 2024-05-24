@@ -10,12 +10,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-<<<<<<< HEAD
     eStatus: {
       enum: ["Y", "N", "B"],
     },
-=======
->>>>>>> parent of c97a563 (cron job to update user status)
   },
   { timestamps: true }
 );
