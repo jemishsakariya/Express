@@ -25,7 +25,7 @@ cron.schedule("0 */1 * * *", async function () {
     {},
     {
       $set: {
-        sStatus:
+        eStatus:
           enumForUserStatus[
             Math.floor(Math.random() * enumForUserStatus.length)
           ],
