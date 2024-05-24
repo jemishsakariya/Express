@@ -1,5 +1,5 @@
 const Admin = require("../models/adminModel");
-const Car = require("../models/carModel");
+const Brand = require("../models/brandModel");
 const Trasaction = require("../models/transactionModel");
 
 exports.addAdmin = async (req, res) => {
@@ -103,6 +103,46 @@ exports.mostSoldCar = async (_req, res) => {
     ]);
 
     return res.status(200).json({ mostSoldCar });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ sMessage: "Internal Server Error", sError: error.message });
+  }
+};
+
+exports.brandsCarSoldMost = async (_req, res) => {
+  try {
+    const mostBrandCarSold = await Trasaction.aggregate([
+      {
+        $lookup: {
+          from: "cars",
+          localField: "iCarsID",
+          foreignField: "_id",
+          as: "brandCar",
+        },
+      },
+      { $unwind: "$brandCar" },
+      {
+        $group: {
+          _id: "$brandCar.iBrands",
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $sort: {
+          count: -1,
+        },
+      },
+      {
+        $limit: 1,
+      },
+    ]);
+
+    const findCar = await Brand.findById(mostBrandCarSold[0]._id);
+
+    return res.status(200).json({ findCar });
   } catch (error) {
     return res
       .status(500)
