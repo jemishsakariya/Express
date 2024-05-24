@@ -3,7 +3,7 @@ exports.isValidUser = (req, res, next) => {
     const sName = req.body.sName;
     const sCity = req.body.sCity;
 
-    if (!sName || !sCity) {
+    if (!sName || !sCity || !sStatus) {
       return res.status(404).json({ sMessage: "Please Fill All The Fields!" });
     }
 

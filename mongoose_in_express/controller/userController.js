@@ -4,8 +4,9 @@ exports.addUser = async (req, res) => {
   try {
     const sName = req.body.sName;
     const sCity = req.body.sCity;
+    const sStatus = req.body.sStatus;
 
-    const user = await User.create({ sName, sCity });
+    const user = await User.create({ sName, sCity, sStatus });
 
     return res
       .status(200)
