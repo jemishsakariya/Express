@@ -99,7 +99,7 @@ router.post("/v1/credittransaction", async (req, res) => {
 
     return res
       .status(200)
-      .json({ user1, user2, sMessage: "user registerd successfully" });
+      .json({ user1, user2, sMessage: "transaction successfully" });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -109,6 +109,43 @@ router.post("/v1/credittransaction", async (req, res) => {
       .json({ sMessage: "Internal Server Error", sError: error.message });
   }
 });
+
+// automatic credit transaction
+/*
+router.post("/v1/credittransaction", async (req, res) => {
+  const session = await mongoose.startSession();
+
+  const transactionOptions = {
+    readPreference: "primary",
+    writeConcern: { level: "majority" },
+    readConcern: { w: "majority" },
+  };
+
+  try {
+    await session.withTransaction(async () => {
+      const user1 = await Wallet.updateOne(
+        { iUserID: req.body.user1 },
+        { $inc: { nBalance: -100 } },
+        { session: session }
+      );
+
+      const user2 = await Wallet.updateOne(
+        { iUserID: req.body.user2 },
+        { $inc: { nBalance: 100 } },
+        { session: session }
+      );
+
+      return res
+        .status(200)
+        .json({ user1, user2, sMessage: "transaction successfully" });
+    }, transactionOptions);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ sMessage: "Internal Server Error", sError: error.message });
+  }
+});
+*/
 
 // create two session and try to update data in collection.
 router.post("/v1/transactionwithtwosession", async (req, res) => {
