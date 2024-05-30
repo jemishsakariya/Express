@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    sPassword: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: { createdAt: "dCreatedAt", updatedAt: "dUpdatedAt" } }
 );

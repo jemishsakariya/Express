@@ -6,9 +6,9 @@ const passbookSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    iWalletID: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Wallet",
+    nAmount: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: { createdAt: "dCreatedAt", updatedAt: "dUpdatedAt" } }
