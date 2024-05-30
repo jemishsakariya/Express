@@ -47,6 +47,12 @@ router.post("/v1/register", async (req, res) => {
 router.post("/v1/register", async (req, res) => {
   const session = await mongoose.startSession();
 
+  const transactionOptions = {
+      readPreference: "primary", // it must be primary for read operation
+      writeConcern: { level: "majority" },
+      readConcern: { w: "majority" },
+  };
+
   try {
     await session.withTransaction(async () => {
       // auto commit or rollback transaction
@@ -55,7 +61,7 @@ router.post("/v1/register", async (req, res) => {
         [{ nBalance: 0, iUserID: user[0]._id }],
         { session: session }
       );
-    });
+    },transactionOptions);
 
     return res.status(200).json({ sMessage: "user registerd successfully" });
   } catch (error) {
@@ -65,6 +71,52 @@ router.post("/v1/register", async (req, res) => {
   }
 });
 */
+
+// create two session and try to update data in collection.
+router.post("/v1/transactionwithtwosession", async (req, res) => {
+  const session1 = await mongoose.startSession();
+  const session2 = await mongoose.startSession();
+  try {
+    const transactionOptions = {
+      readPreference: "primary",
+      writeConcern: { level: "majority" },
+      readConcern: { w: "majority" },
+    };
+    session1.startTransaction(transactionOptions);
+    session2.startTransaction(transactionOptions);
+
+    // inc user balance by two session
+    await Wallet.updateOne(
+      { _id: req.body.iUserID },
+      { $inc: { nBalance: 10 } },
+      { session: session1 }
+    );
+
+    await Wallet.updateOne(
+      { _id: req.body.iUserID },
+      { $inc: { nBalance: 20 } },
+      { session: session2 }
+    );
+
+    await session1.commitTransaction();
+    session1.endSession();
+
+    await session2.commitTransaction();
+    session2.endSession();
+
+    return res.status(200).json({ sMessage: "transaction success" });
+  } catch (error) {
+    await session1.abortTransaction();
+    session1.endSession();
+
+    await session2.abortTransaction();
+    session2.endSession();
+
+    return res
+      .status(500)
+      .json({ sMessage: "Internal Server Error", sError: error.message });
+  }
+});
 
 router.all("*", function (_req, res) {
   res.status(404).json({ sMessage: "Route Not Found!!" });
