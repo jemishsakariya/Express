@@ -72,6 +72,44 @@ router.post("/v1/register", async (req, res) => {
 });
 */
 
+router.post("/v1/credittransaction", async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    const transactionOptions = {
+      readPreference: "primary",
+      writeConcern: { level: "majority" },
+      readConcern: { w: "majority" },
+    };
+    session.startTransaction(transactionOptions);
+
+    const user1 = await Wallet.updateOne(
+      { iUserID: req.body.user1 },
+      { $inc: { nBalance: -100 } },
+      { session: session }
+    );
+
+    const user2 = await Wallet.updateOne(
+      { iUserID: req.body.user2 },
+      { $inc: { nBalance: 100 } },
+      { session: session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res
+      .status(200)
+      .json({ user1, user2, sMessage: "user registerd successfully" });
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
+    return res
+      .status(500)
+      .json({ sMessage: "Internal Server Error", sError: error.message });
+  }
+});
+
 // create two session and try to update data in collection.
 router.post("/v1/transactionwithtwosession", async (req, res) => {
   const session1 = await mongoose.startSession();
