@@ -6,12 +6,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    nBalance: {
-      type: Number,
-      required: true,
-    },
   },
-  { timestamps: true }
+  { timestamps: { createdAt: "dCreatedAt", updatedAt: "dUpdatedAt" } }
 );
 
 module.exports = mongoose.model("User", userSchema);
