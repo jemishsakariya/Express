@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../model/userModel");
 const Wallet = require("../model/walletModel");
+const Passbook = require("../model/passbookModel");
 
 const router = require("express").Router();
 
@@ -82,15 +83,20 @@ router.post("/v1/credittransaction", async (req, res) => {
     };
     session.startTransaction(transactionOptions);
 
-    const user1 = await Wallet.updateOne(
+    const user1 = await Wallet.findOneAndUpdate(
       { iUserID: req.body.user1 },
       { $inc: { nBalance: -100 } },
-      { session: session }
+      { session: session, new: true }
     );
 
-    const user2 = await Wallet.updateOne(
+    const user2 = await Wallet.findOneAndUpdate(
       { iUserID: req.body.user2 },
       { $inc: { nBalance: 100 } },
+      { session: session, new: true }
+    );
+
+    const transaction = await Passbook.create(
+      [{ iUserID: req.body.user1, nAmount: user1.nBalance }],
       { session: session }
     );
 
@@ -123,17 +129,22 @@ router.post("/v1/credittransaction", async (req, res) => {
 
   try {
     await session.withTransaction(async () => {
-      const user1 = await Wallet.updateOne(
-        { iUserID: req.body.user1 },
-        { $inc: { nBalance: -100 } },
-        { session: session }
-      );
+    const user1 = await Wallet.findOneAndUpdate(
+      { iUserID: req.body.user1 },
+      { $inc: { nBalance: -100 } },
+      { session: session, new: true }
+    );
 
-      const user2 = await Wallet.updateOne(
-        { iUserID: req.body.user2 },
-        { $inc: { nBalance: 100 } },
-        { session: session }
-      );
+    const user2 = await Wallet.findOneAndUpdate(
+      { iUserID: req.body.user2 },
+      { $inc: { nBalance: 100 } },
+      { session: session, new: true }
+    );
+
+    const transaction = await Passbook.create(
+      [{ iUserID: req.body.user1, nAmount: user1.nBalance }],
+      { session: session }
+    );
 
       return res
         .status(200)
